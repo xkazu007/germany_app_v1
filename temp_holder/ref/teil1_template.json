@@ -1,0 +1,37 @@
+INSERT INTO teile (part_id, content, solution)
+SELECT
+  p.id,
+  jsonb_build_object(
+    'title', 'Insel',
+    'photo', 'insel.jpg',
+    'headings', jsonb_build_array(
+      jsonb_build_object('id','A','text','Deutscher Forscher startet Expedition auf Vogelinsel in Südamerika'),
+      jsonb_build_object('id','B','text','Die beliebtesten Reiseziele unter den europäischen Inseln'),
+      jsonb_build_object('id','C','text','Fernreisen in eine unberührte Tierwelt'),
+      jsonb_build_object('id','D','text','Geführte Bootsausflüge zu einsamen Badebuchten'),
+      jsonb_build_object('id','E','text','Grüne Geisterinsel in Asien'),
+      jsonb_build_object('id','F','text','Immer mehr Reiseunternehmen streichen Thailand aus ihrem Angebot'),
+      jsonb_build_object('id','G','text','Inseln zählen weltweit zu den wichtigsten Reisedestinationen'),
+      jsonb_build_object('id','H','text','Nachhaltiger Tourismus auf chinesischen Inseln'),
+      jsonb_build_object('id','I','text','Tierparadies auf einer Nordseeinsel'),
+      jsonb_build_object('id','J','text','Umstrittener Umgang mit Tieren als Touristenmagnet')
+    ),
+    'paragraphs', jsonb_build_array(
+      jsonb_build_object('id',1,'text',$$Die Shengsi-Inseln liegen im Ostchinesischen Meer...$$),
+      jsonb_build_object('id',2,'text',$$Der Reiseveranstalter TOURIMARS hat kürzlich eine Befragung durchgeführt...$$),
+      jsonb_build_object('id',3,'text',$$Das ostfriesische Memmert ist für selten Vögel reserviert...$$),
+      jsonb_build_object('id',4,'text',$$Die südamerikanischen Galapagosinseln locken nicht mit weißen Sandstränden...$$),
+      jsonb_build_object('id',5,'text',$$Dass Elefanten in Thailand teurer sein können als ein 3er-BMW in München liegt...$$)
+    )
+  ),
+  jsonb_build_object(
+    '1','E',
+    '2','B',
+    '3','I',
+    '4','C',
+    '5','J'
+  )
+FROM parts p
+WHERE p.part_number = 1
+RETURNING id AS teil_id, part_id;
+

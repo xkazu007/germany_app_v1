@@ -1,0 +1,574 @@
+import React, { useState, useEffect } from 'react';
+import { 
+  CheckCircle, 
+  Play, 
+  Award, 
+  Clock, 
+  Mic, 
+  FileText, 
+  TrendingUp, 
+  Users, 
+  Menu, 
+  X, 
+  ArrowLeft, 
+  ArrowRight,
+  Star,
+  Globe,
+  ShieldCheck,
+  MapPin,
+  Languages,
+  BookOpen,
+  Headphones,
+  MessageCircle,
+  PenTool,
+  ChevronRight
+} from 'lucide-react';
+
+// --- Content Dictionary ---
+const content = {
+  en: {
+    nav: {
+      features: "Platform",
+      why_us: "Solutions",
+      pricing: "Pricing",
+      login: "Log in",
+      cta: "Sign up free"
+    },
+    hero: {
+      title_start: "Turn Every",
+      title_highlight: "German Exam",
+      title_end: "into a Success Story",
+      subtitle: "One AI-powered platform for all your B2 prep needs. From **Speaking** to **Writing**, drive your progress and secure your visa.",
+      cta_primary: "Start Free Trial",
+      cta_secondary: "Get a demo",
+      loved_by: "Loved by users everywhere",
+      users_count: "Join 2,000+ students who trust TelcSim"
+    },
+    logos_title: "Trusted by students aiming for",
+    features: {
+      title: "Grow your language skills easily",
+      desc: "Launch your preparation in minutes. Skip the learning curve with ready-made B2 templates, guided simulations, and intuitive tools anyone can master.",
+      link: "Learn more",
+      cards: [
+        { title: "AI-First Platform", desc: "Work smarter with TelcSim AI. Optimize every answer with personalized grammar corrections and clear insights.", badge: "NEW" },
+        { title: "Built to scale with you", desc: "Start with B1, master B2, and aim for C1. Manage your entire journey from one powerful dashboard." }
+      ]
+    },
+    modules: {
+      title: "Master every module your way",
+      items: [
+        { name: "Speaking", icon: Mic },
+        { name: "Writing", icon: PenTool },
+        { name: "Reading", icon: BookOpen },
+        { name: "Listening", icon: Headphones },
+        { name: "Vocab", icon: MessageCircle },
+        { name: "Grammar", icon: FileText },
+      ]
+    },
+    stories: {
+      title: "Real stories, real success",
+      items: [
+        { title: "Yassine secures Visa", stat: "B2 Passed", desc: "After practicing with TelcSim, Yassine improved his Speaking score by 40% in just 2 weeks." },
+        { title: "Salma enters Uni", stat: "100% Ready", desc: "Using the Writing AI, Salma mastered the 'Beschwerde' structure and passed C1 Hochschule." },
+        { title: "Amine gets Job", stat: "Hired", desc: "The interview simulation helped Amine feel confident not just for the exam, but for his job interview." }
+      ]
+    },
+    cta_bottom: {
+      title: "Ready to grow with TelcSim?",
+      desc: "Connect with the language, convert your efforts into a certificate, and drive your future forward.",
+      btn: "Sign up free"
+    },
+    footer: {
+      copy: "TelcSim GmbH. Not affiliated with Telc gGmbH."
+    }
+  },
+  ar: {
+    nav: {
+      features: "Al Platform",
+      why_us: "L'holoul",
+      pricing: "Al Atmina",
+      login: "Dkhul",
+      cta: "Sjel Fabour"
+    },
+    hero: {
+      title_start: "Reje3 Kol",
+      title_highlight: "Mtihan Almani",
+      title_end: "Qissat Najah",
+      subtitle: "Platform wehda fiha **AI** bach twjed B2. Mn **Speaking** l **Writing**, hssen nivo dialek w dmen l'visa.",
+      cta_primary: "Bda Fabour",
+      cta_secondary: "Chouf Demo",
+      loved_by: "Nas f'lmaghrib kaml kaybeghiwh",
+      users_count: "Dmam l' 2,000+ talib kaytiqo f'TelcSim"
+    },
+    logos_title: "Kaytiqo fina talaba li baghin imchiw l'",
+    features: {
+      title: "Tawer lugha dialek b'suhula",
+      desc: "Bda l'preparation f'dqayeq. Hfed bla stress m3a namadij B2 wajda, simulation sahla, w adawat ay wahd iqder ifhmha.",
+      link: "3ref ktr",
+      cards: [
+        { title: "Platform Katkhdem bl'AI", desc: "Khdem b'dhakae m3a TelcSim AI. Hassan kul jawab m3a tashi7 l'grammar w nasa2ih wadha.", badge: "JDID" },
+        { title: "Mbnia bach tkber m3ak", desc: "Bda b B1, jib B2, w tme7 l C1. Tbe3 l'parcour dialek kaml mn dashboard wahd." }
+      ]
+    },
+    modules: {
+      title: "T9en kul module 3la tariqtek",
+      items: [
+        { name: "Speaking", icon: Mic },
+        { name: "Writing", icon: PenTool },
+        { name: "Reading", icon: BookOpen },
+        { name: "Listening", icon: Headphones },
+        { name: "Vocab", icon: MessageCircle },
+        { name: "Grammar", icon: FileText },
+      ]
+    },
+    stories: {
+      title: "Qisas haqiqia, najah haqiqi",
+      items: [
+        { title: "Yassine dman l'Visa", stat: "Njah f'B2", desc: "Melli trenna f'TelcSim, Yassine zad f'noqat d'Speaking b'40% f'jouj simanat." },
+        { title: "Salma dakhlat l'Jamia", stat: "Wajda 100%", desc: "B'fdel Writing AI, Salma fehmat kifach tkteb 'Beschwerde' w njhat f'C1 Hochschule." },
+        { title: "Amine lqa khedma", stat: "Mwaddef", desc: "Simulation 3awnet Amine ytiq f'raso machi ghir f'l'examen, walakin hta f'l'entretien." }
+      ]
+    },
+    cta_bottom: {
+      title: "Wajed bach tir l'Almania?",
+      desc: "Tconnecta m3a l'almania, hawl l'majhudat dialek l'chahada, w zid b'mustaqbalek l'qddam.",
+      btn: "Sjel Fabour"
+    },
+    footer: {
+      copy: "TelcSim GmbH. Not affiliated with Telc gGmbH."
+    }
+  }
+};
+
+// --- Global Styles for Fonts ---
+const GlobalStyles = () => (
+  <style>{`
+    @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&family=Inter:wght@400;500;600;700;800&display=swap');
+    
+    .font-ar { font-family: 'Tajawal', sans-serif; }
+    .font-en { font-family: 'Inter', sans-serif; }
+    
+    .dir-rtl { direction: rtl; }
+    .dir-ltr { direction: ltr; }
+    
+    /* Soft Red Gradient Background for Hero */
+    .bg-hero-red {
+       background: radial-gradient(circle at 50% 0%, #fff1f2 0%, #ffffff 100%);
+    }
+  `}</style>
+);
+
+// --- Components ---
+
+const Navbar = ({ lang, setLang, t }) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => setScrolled(window.scrollY > 20);
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  const toggleLang = () => setLang(prev => prev === 'en' ? 'ar' : 'en');
+
+  return (
+    <nav className={`fixed w-full z-50 transition-all duration-300 ${lang === 'ar' ? 'dir-rtl' : 'dir-ltr'} ${scrolled ? 'bg-white/95 backdrop-blur-md shadow-sm py-3' : 'bg-transparent py-5'}`}>
+      <div className="container mx-auto px-6 flex justify-between items-center">
+        {/* Logo */}
+        <div className="flex items-center gap-2">
+          {/* Red Brand Block */}
+          <div className="w-8 h-8 bg-red-600 rounded flex items-center justify-center text-white font-bold text-lg">
+            T
+          </div>
+          <span className="text-xl font-bold tracking-tight text-slate-900">
+            Telc<span className="text-red-600">Sim</span>
+          </span>
+        </div>
+
+        {/* Desktop Menu */}
+        <div className="hidden md:flex items-center gap-8">
+          {['features', 'why_us', 'pricing'].map((key) => (
+            <a key={key} href={`#${key}`} className="text-slate-600 hover:text-red-600 font-medium transition-colors text-sm">
+              {t.nav[key]}
+            </a>
+          ))}
+          
+          <div className="h-4 w-px bg-slate-300"></div>
+
+          <button 
+            onClick={toggleLang}
+            className="flex items-center gap-2 text-slate-600 hover:text-red-600 font-medium transition-colors text-sm"
+          >
+            <Globe size={14} />
+            <span>{lang === 'en' ? 'Darija' : 'English'}</span>
+          </button>
+
+          <button className="text-slate-900 font-medium hover:text-red-600 transition-colors text-sm">
+            {t.nav.login}
+          </button>
+          <button className="px-5 py-2.5 bg-red-600 hover:bg-red-700 text-white rounded-full font-bold transition-all shadow-md shadow-red-200 hover:shadow-lg text-sm">
+            {t.nav.cta}
+          </button>
+        </div>
+
+        {/* Mobile Toggle */}
+        <div className="flex items-center gap-4 md:hidden">
+          <button onClick={toggleLang} className="text-slate-600 font-bold text-sm">
+            {lang === 'en' ? '🇲🇦' : '🇺🇸'}
+          </button>
+          <button className="text-slate-800" onClick={() => setIsOpen(!isOpen)}>
+            {isOpen ? <X size={28} /> : <Menu size={28} />}
+          </button>
+        </div>
+      </div>
+
+      {/* Mobile Menu */}
+      {isOpen && (
+        <div className={`md:hidden absolute top-full ${lang === 'ar' ? 'right-0 text-right' : 'left-0 text-left'} w-full bg-white border-t border-slate-100 shadow-xl p-6 flex flex-col gap-4`}>
+          {['features', 'why_us', 'pricing'].map((key) => (
+            <a key={key} href="#" className="text-lg font-bold text-slate-700 py-2 border-b border-slate-50">
+              {t.nav[key]}
+            </a>
+          ))}
+          <button className="w-full py-3 bg-red-600 text-white rounded-xl font-bold mt-2">
+            {t.nav.cta}
+          </button>
+        </div>
+      )}
+    </nav>
+  );
+};
+
+const Hero = ({ lang, t }) => {
+  const isRTL = lang === 'ar';
+  
+  return (
+    <section className={`relative pt-32 pb-16 lg:pt-48 lg:pb-24 overflow-hidden bg-hero-red ${isRTL ? 'dir-rtl' : 'dir-ltr'}`}>
+      <div className="container mx-auto px-6">
+        <div className="flex flex-col lg:flex-row items-center gap-16">
+          
+          {/* Text Content - Brevo Style: Left Aligned, Bold Typography */}
+          <div className={`lg:w-1/2 space-y-6 ${isRTL ? 'text-right' : 'text-left'}`}>
+            <h1 className="text-5xl lg:text-7xl font-extrabold text-slate-900 leading-[1.1] tracking-tight">
+              {t.hero.title_start} <br />
+              <span className="text-red-600">{t.hero.title_highlight}</span> <br/>
+              {t.hero.title_end}
+            </h1>
+            
+            <p className={`text-lg text-slate-600 max-w-lg leading-relaxed ${isRTL ? 'ml-auto' : ''}`}>
+              {t.hero.subtitle.split('**').map((part, i) => 
+                i % 2 === 1 ? <strong key={i} className="text-slate-900 font-bold">{part}</strong> : part
+              )}
+            </p>
+
+            <div className="flex flex-col sm:flex-row gap-4 pt-4">
+              <button className="px-8 py-3.5 bg-red-600 text-white rounded-full font-bold text-base hover:bg-red-700 transition-all shadow-lg shadow-red-200 hover:-translate-y-0.5 flex items-center justify-center gap-2">
+                {t.hero.cta_primary}
+              </button>
+              <button className="px-8 py-3.5 bg-white text-slate-700 border border-slate-200 rounded-full font-bold text-base hover:bg-slate-50 transition-all flex items-center justify-center gap-2">
+                {t.hero.cta_secondary}
+              </button>
+            </div>
+
+            {/* "Loved by users" Block */}
+            <div className="pt-8 border-t border-red-100/50 mt-4">
+              <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-2">{t.hero.loved_by}</p>
+              <div className="flex items-center gap-4">
+                <div className="flex items-center gap-1 text-yellow-400">
+                  <span className="text-slate-900 font-bold text-lg mr-1">4.8</span>
+                  {[1,2,3,4,5].map(i => <Star key={i} className="fill-current" size={18} />)}
+                </div>
+                <div className="h-4 w-px bg-slate-200"></div>
+                <p className="text-sm text-slate-600 font-medium">{t.hero.users_count}</p>
+              </div>
+            </div>
+          </div>
+
+          {/* Hero Visual - Clean, Right Aligned */}
+          <div className="lg:w-1/2 relative">
+            <div className={`relative z-10 bg-white rounded-xl shadow-2xl border border-slate-100 p-2 transform hover:rotate-0 transition-all duration-500`}>
+               {/* Browser Header */}
+              <div className="bg-slate-50 rounded-t-lg border-b border-slate-100 flex items-center px-4 py-3 gap-2" dir="ltr">
+                <div className="flex gap-1.5">
+                  <div className="w-3 h-3 rounded-full bg-red-400"></div>
+                  <div className="w-3 h-3 rounded-full bg-yellow-400"></div>
+                  <div className="w-3 h-3 rounded-full bg-green-400"></div>
+                </div>
+                <div className="flex-1 text-center">
+                  <div className="inline-block bg-white border border-slate-200 rounded text-[10px] text-slate-400 font-mono px-2 py-0.5">
+                    telcsim.ma/dashboard
+                  </div>
+                </div>
+              </div>
+              
+              {/* Dashboard Content Mockup */}
+              <div className="p-6 font-en bg-white rounded-b-lg">
+                <div className="flex justify-between items-center mb-8">
+                  <div>
+                    <h3 className="text-xl font-bold text-slate-800">Hallo, Yassine 👋</h3>
+                    <p className="text-slate-400 text-sm">Level: B2 Beruf</p>
+                  </div>
+                  <div className="w-10 h-10 rounded-full bg-red-100 flex items-center justify-center text-red-600 font-bold">YB</div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-4 mb-6">
+                   <div className="p-4 rounded-xl bg-red-50 border border-red-100">
+                      <div className="flex justify-between items-start mb-2">
+                        <Mic size={20} className="text-red-600" />
+                        <span className="text-xs font-bold bg-white text-red-600 px-2 py-0.5 rounded-full">New</span>
+                      </div>
+                      <div className="text-2xl font-bold text-slate-800">85%</div>
+                      <div className="text-xs text-slate-500">Speaking Score</div>
+                   </div>
+                   <div className="p-4 rounded-xl bg-slate-50 border border-slate-100">
+                      <div className="flex justify-between items-start mb-2">
+                        <FileText size={20} className="text-slate-600" />
+                      </div>
+                      <div className="text-2xl font-bold text-slate-800">12</div>
+                      <div className="text-xs text-slate-500">Essays Corrected</div>
+                   </div>
+                </div>
+                
+                <div className="space-y-3">
+                  <div className="text-xs font-bold text-slate-400 uppercase">Recent Activity</div>
+                  <div className="flex items-center gap-3 p-3 hover:bg-slate-50 rounded-lg transition-colors cursor-pointer border border-transparent hover:border-slate-100">
+                    <div className="w-8 h-8 rounded-lg bg-green-100 flex items-center justify-center text-green-600"><CheckCircle size={16}/></div>
+                    <div className="flex-1">
+                       <div className="text-sm font-bold text-slate-800">Leseverstehen Teil 1</div>
+                       <div className="text-xs text-slate-500">Completed 2 mins ago</div>
+                    </div>
+                    <ChevronRight size={16} className="text-slate-300"/>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+};
+
+const Logos = ({ lang, t }) => {
+  const isRTL = lang === 'ar';
+  return (
+    <section className={`py-10 border-b border-slate-100 ${isRTL ? 'dir-rtl' : 'dir-ltr'}`}>
+       <div className="container mx-auto px-6 text-center">
+          <p className="text-sm font-medium text-slate-400 mb-6">{t.logos_title}</p>
+          <div className="flex flex-wrap justify-center gap-8 md:gap-16 opacity-60 grayscale hover:grayscale-0 transition-all duration-500">
+             {/* Text-based Logos for simplicity */}
+             <span className="text-xl font-bold text-slate-800">GOETHE</span>
+             <span className="text-xl font-bold text-slate-800">telc</span>
+             <span className="text-xl font-bold text-slate-800">ÖSD</span>
+             <span className="text-xl font-bold text-slate-800">TestDaF</span>
+             <span className="text-xl font-bold text-slate-800">Ausbildung.de</span>
+          </div>
+       </div>
+    </section>
+  )
+}
+
+const Features = ({ lang, t }) => {
+  const isRTL = lang === 'ar';
+  
+  return (
+    <section id="features" className={`py-24 bg-white ${isRTL ? 'dir-rtl' : 'dir-ltr'}`}>
+      <div className="container mx-auto px-6">
+        
+        {/* Top Text Block */}
+        <div className="max-w-3xl mb-16">
+          <div className="text-red-600 font-bold tracking-wider text-sm uppercase mb-2">Multichannel Learning</div>
+          <h2 className="text-3xl md:text-4xl font-extrabold text-slate-900 mb-6">{t.features.title}</h2>
+          <p className="text-lg text-slate-600 leading-relaxed mb-6">{t.features.desc}</p>
+          <a href="#" className="inline-flex items-center gap-2 text-red-600 font-bold hover:gap-3 transition-all">
+             {t.features.link} {isRTL ? <ArrowLeft size={16} /> : <ArrowRight size={16} />}
+          </a>
+        </div>
+
+        {/* Feature Cards Grid (Brevo Style) */}
+        <div className="grid md:grid-cols-2 gap-8">
+           {t.features.cards.map((card, i) => (
+             <div key={i} className="bg-slate-50 rounded-2xl p-8 md:p-12 border border-slate-100 hover:border-red-200 transition-colors group">
+                <div className="mb-6">
+                  {i === 0 ? (
+                    <div className="w-16 h-16 rounded-2xl bg-white shadow-sm flex items-center justify-center text-red-600 group-hover:scale-110 transition-transform">
+                      <Award size={32} />
+                    </div>
+                  ) : (
+                    <div className="w-16 h-16 rounded-2xl bg-white shadow-sm flex items-center justify-center text-slate-800 group-hover:scale-110 transition-transform">
+                      <TrendingUp size={32} />
+                    </div>
+                  )}
+                </div>
+                {card.badge && (
+                  <span className="inline-block bg-red-100 text-red-700 text-xs font-bold px-2 py-1 rounded mb-4">{card.badge}</span>
+                )}
+                <h3 className="text-2xl font-bold text-slate-900 mb-4">{card.title}</h3>
+                <p className="text-slate-600 leading-relaxed mb-6">{card.desc}</p>
+                <a href="#" className="inline-flex items-center gap-2 text-slate-900 font-bold group-hover:text-red-600 transition-colors">
+                  {t.features.link} {isRTL ? <ArrowLeft size={16} /> : <ArrowRight size={16} />}
+                </a>
+             </div>
+           ))}
+        </div>
+
+      </div>
+    </section>
+  );
+};
+
+const Modules = ({ lang, t }) => {
+  const isRTL = lang === 'ar';
+  
+  return (
+    <section className={`py-20 bg-slate-50 ${isRTL ? 'dir-rtl' : 'dir-ltr'}`}>
+       <div className="container mx-auto px-6">
+          <div className="text-center mb-12">
+            <h2 className="text-2xl md:text-3xl font-extrabold text-slate-900">{t.modules.title}</h2>
+          </div>
+          
+          <div className="flex flex-wrap justify-center gap-4 md:gap-8">
+             {t.modules.items.map((item, i) => {
+               const Icon = item.icon;
+               return (
+                 <div key={i} className="flex flex-col items-center gap-3 group cursor-pointer">
+                    <div className="w-16 h-16 md:w-20 md:h-20 bg-white rounded-2xl shadow-sm border border-slate-100 flex items-center justify-center text-slate-500 group-hover:text-red-600 group-hover:border-red-200 group-hover:-translate-y-1 transition-all duration-300">
+                       <Icon size={28} />
+                    </div>
+                    <span className="text-sm font-bold text-slate-600 group-hover:text-red-600 transition-colors">{item.name}</span>
+                 </div>
+               )
+             })}
+          </div>
+       </div>
+    </section>
+  )
+}
+
+const SuccessStories = ({ lang, t }) => {
+  const isRTL = lang === 'ar';
+  return (
+    <section className={`py-24 bg-white ${isRTL ? 'dir-rtl' : 'dir-ltr'}`}>
+      <div className="container mx-auto px-6">
+        <h2 className="text-sm font-bold text-red-600 uppercase tracking-wider mb-12">{t.stories.title}</h2>
+        
+        <div className="grid md:grid-cols-3 gap-8">
+           {t.stories.items.map((story, i) => (
+             <div key={i} className="border-t-4 border-red-600 pt-6">
+               <h3 className="text-xl font-bold text-slate-900 mb-2">{story.title}</h3>
+               <div className="text-4xl font-extrabold text-slate-900 mb-4">{story.stat}</div>
+               <p className="text-slate-600 text-sm leading-relaxed mb-6 border-l-2 border-slate-100 pl-4">
+                 {story.desc}
+               </p>
+               <a href="#" className="text-red-600 font-bold text-sm hover:underline">Read full story</a>
+             </div>
+           ))}
+        </div>
+      </div>
+    </section>
+  )
+}
+
+const CTA = ({ lang, t }) => {
+  const isRTL = lang === 'ar';
+  return (
+    <section className={`py-24 bg-slate-900 text-white ${isRTL ? 'dir-rtl' : 'dir-ltr'}`}>
+      <div className="container mx-auto px-6 text-center">
+        <div className="max-w-2xl mx-auto space-y-8">
+           <h2 className="text-3xl md:text-5xl font-extrabold">{t.cta_bottom.title}</h2>
+           <p className="text-slate-300 text-xl leading-relaxed">{t.cta_bottom.desc}</p>
+           <div className="flex flex-col sm:flex-row justify-center gap-4">
+              <button className="px-8 py-4 bg-red-600 hover:bg-red-700 text-white rounded-full font-bold text-lg transition-all shadow-lg shadow-red-900/20">
+                {t.cta_bottom.btn}
+              </button>
+              <button className="px-8 py-4 bg-transparent border border-slate-600 hover:bg-white/10 text-white rounded-full font-bold text-lg transition-all">
+                {t.hero.cta_secondary}
+              </button>
+           </div>
+           
+           {/* Logos in CTA (Brevo Style) */}
+           <div className="pt-10 flex justify-center gap-6 opacity-40">
+              <div className="font-bold text-xl">Stripe</div>
+              <div className="font-bold text-xl">PayPal</div>
+              <div className="font-bold text-xl">Visa</div>
+           </div>
+        </div>
+      </div>
+    </section>
+  );
+};
+
+const Footer = ({ lang, t }) => {
+  const isRTL = lang === 'ar';
+  return (
+    <footer className={`bg-white pt-20 pb-10 border-t border-slate-100 ${isRTL ? 'dir-rtl' : 'dir-ltr'}`}>
+      <div className="container mx-auto px-6">
+        <div className="grid md:grid-cols-4 gap-12 mb-16 text-sm">
+          <div className="space-y-4">
+            <div className="flex items-center gap-2">
+               <div className="w-6 h-6 bg-red-600 rounded flex items-center justify-center text-white text-xs font-bold">T</div>
+               <span className="text-xl font-bold text-slate-900">TelcSim</span>
+            </div>
+          </div>
+          
+          <div>
+            <h4 className="font-bold text-slate-900 mb-6 uppercase tracking-wider text-xs">Product</h4>
+            <ul className="space-y-3 text-slate-500">
+              <li><a href="#" className="hover:text-red-600">Why TelcSim?</a></li>
+              <li><a href="#" className="hover:text-red-600">Pricing</a></li>
+              <li><a href="#" className="hover:text-red-600">Enterprise</a></li>
+            </ul>
+          </div>
+
+          <div>
+            <h4 className="font-bold text-slate-900 mb-6 uppercase tracking-wider text-xs">Compare</h4>
+            <ul className="space-y-3 text-slate-500">
+              <li><a href="#" className="hover:text-red-600">Vs Goethe</a></li>
+              <li><a href="#" className="hover:text-red-600">Vs VHS</a></li>
+            </ul>
+          </div>
+
+          <div>
+            <h4 className="font-bold text-slate-900 mb-6 uppercase tracking-wider text-xs">Company</h4>
+            <ul className="space-y-3 text-slate-500">
+              <li><a href="#" className="hover:text-red-600">About us</a></li>
+              <li><a href="#" className="hover:text-red-600">Careers</a></li>
+              <li><a href="#" className="hover:text-red-600">Contact</a></li>
+            </ul>
+          </div>
+        </div>
+        
+        <div className="flex flex-col md:flex-row justify-between items-center border-t border-slate-100 pt-8 gap-4 text-xs text-slate-400">
+          <div>&copy; {new Date().getFullYear()} {t.footer.copy}</div>
+          <div className="flex gap-4">
+            <a href="#" className="hover:text-slate-600">Cookie Settings</a>
+            <a href="#" className="hover:text-slate-600">Privacy Policy</a>
+            <a href="#" className="hover:text-slate-600">Terms</a>
+          </div>
+        </div>
+      </div>
+    </footer>
+  );
+};
+
+const App = () => {
+  const [lang, setLang] = useState('ar'); // Default to Darija
+  const t = content[lang];
+
+  return (
+    <div className={`bg-white selection:bg-red-100 selection:text-red-900 ${lang === 'ar' ? 'font-ar' : 'font-en'}`}>
+      <GlobalStyles />
+      <Navbar lang={lang} setLang={setLang} t={t} />
+      <Hero lang={lang} t={t} />
+      <Logos lang={lang} t={t} />
+      <Features lang={lang} t={t} />
+      <Modules lang={lang} t={t} />
+      <SuccessStories lang={lang} t={t} />
+      <CTA lang={lang} t={t} />
+      <Footer lang={lang} t={t} />
+    </div>
+  );
+};
+
+export default App;

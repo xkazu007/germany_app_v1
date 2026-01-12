@@ -1,0 +1,828 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Telc Leseverstehen - B2</title>
+    <style>
+        :root {
+            --telc-red: #e3001b;
+            --telc-blue: #152b48;
+            --header-bg-top: #444;
+            --header-bg-bottom: #222;
+            --light-purple: #eef1f8;
+            --selection-blue: #dceefc;
+            --dark-text: #2a2a2a;
+            --alert-yellow: #fffec8;
+            --alert-border: #e6e6a0;
+            --btn-blue: #004b96;
+            --btn-gradient-top: #2b7ae3;
+            --btn-gradient-bottom: #1c5ab5;
+            --border-grey: #ccc;
+        }
+
+        * {
+            box-sizing: border-box;
+            font-family: "Segoe UI", Arial, sans-serif;
+            /* Prevent text selection during drag operations for better UX */
+            user-select: none; 
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            color: #333;
+        }
+
+        /* --- Header Structure --- */
+        header {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+        }
+
+        .top-bar {
+            background: linear-gradient(to bottom, var(--header-bg-top), var(--header-bg-bottom));
+            color: white;
+            padding: 8px 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            height: 85px;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo-box {
+            background-color: var(--telc-red);
+            color: white;
+            padding: 8px 12px;
+            font-weight: 800;
+            font-size: 22px;
+            border-radius: 3px;
+            margin-right: 15px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+            line-height: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        .logo-sub {
+            font-size: 9px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-top: 2px;
+            font-weight: 400;
+        }
+
+        /* Tabs */
+        .tabs-wrapper {
+            display: flex;
+            gap: 4px;
+            align-self: flex-end;
+            margin-bottom: -8px;
+        }
+
+        .tab {
+            background-color: #666;
+            color: #ccc;
+            padding: 8px 10px;
+            width: 110px;
+            text-align: center;
+            font-size: 11px;
+            border-top-left-radius: 4px;
+            border-top-right-radius: 4px;
+            cursor: pointer;
+            position: relative;
+            box-shadow: inset 0 -5px 10px rgba(0,0,0,0.2);
+            line-height: 1.3;
+        }
+
+        .tab strong {
+            display: block;
+            color: #eee;
+            margin-bottom: 2px;
+        }
+
+        .tab.active {
+            background-color: white;
+            color: #333;
+            height: 65px;
+            z-index: 10;
+            box-shadow: 0 -2px 5px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .tab.active strong {
+            color: #000;
+        }
+        
+        .tab.active .points {
+            color: #cc0000;
+            font-weight: bold;
+        }
+
+        /* Right Side Header Controls */
+        .header-controls {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 5px;
+            font-size: 12px;
+            min-width: 220px;
+        }
+
+        .btn-action {
+            background: linear-gradient(to bottom, var(--btn-gradient-top), var(--btn-gradient-bottom));
+            border: 1px solid #0d4189;
+            color: white;
+            padding: 4px 10px;
+            border-radius: 3px;
+            font-weight: bold;
+            font-size: 11px;
+            cursor: pointer;
+            width: 100%;
+            text-align: left;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .btn-action::after {
+            content: '>';
+            font-weight: bold;
+            margin-left: 5px;
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            color: #ddd;
+        }
+
+        .blue-stripe {
+            background-color: var(--telc-blue);
+            color: white;
+            padding: 8px 20px;
+            font-size: 16px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            height: 40px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            z-index: 5;
+        }
+
+        /* --- Main Content Area --- */
+        .main-wrapper {
+            flex: 1;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            height: calc(100vh - 125px);
+            overflow: hidden;
+        }
+
+        .instruction-box {
+            background-color: var(--alert-yellow);
+            border: 1px solid var(--alert-border);
+            padding: 10px 15px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            font-size: 13px;
+            color: #333;
+            flex-shrink: 0;
+        }
+
+        .split-view {
+            display: flex;
+            gap: 15px;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        /* Text Column (Left) */
+        .text-column {
+            flex: 6;
+            overflow-y: auto;
+            padding-right: 5px;
+        }
+
+        .email-container {
+            background: white;
+            border: 1px solid #ccc;
+            margin-bottom: 25px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .email-header {
+            background-color: var(--light-purple);
+            padding: 5px 15px;
+            color: var(--telc-blue);
+            font-weight: bold;
+            border-bottom: 1px solid #ccc;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            height: 35px;
+        }
+
+        /* --- Drop Zone Styling --- */
+        .drop-zone {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 60px;
+            height: 24px;
+            margin-left: 5px;
+            border: 1px dashed #999;
+            background-color: rgba(255, 255, 255, 0.5);
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            color: #666;
+            font-size: 12px;
+        }
+
+        .drop-zone:hover {
+            background-color: white;
+            border-color: var(--telc-blue);
+        }
+
+        /* Active state for Click-to-Select */
+        .drop-zone.active-target {
+            border: 2px solid var(--telc-red);
+            background-color: #fff0f0;
+            box-shadow: 0 0 5px rgba(227, 0, 27, 0.3);
+            animation: pulse 1.5s infinite;
+        }
+
+        /* Filled State */
+        .drop-zone.filled {
+            background-color: var(--telc-blue);
+            color: white;
+            border: 1px solid var(--telc-blue);
+            font-weight: bold;
+            font-size: 14px;
+            cursor: grab; /* Indicates draggable */
+        }
+
+        .drop-zone.drag-over {
+            background-color: #d1e7ff; /* Light blue highlight on hover */
+            border: 2px solid var(--btn-blue);
+            transform: scale(1.05);
+        }
+
+        .email-meta {
+            padding: 10px 15px;
+            background-color: #f9f9f9;
+            border-bottom: 1px solid #eee;
+        }
+
+        .meta-row {
+            display: flex;
+            margin-bottom: 4px;
+            align-items: center;
+        }
+
+        .meta-label {
+            width: 60px;
+            font-size: 11px;
+            color: #666;
+            font-weight: bold;
+        }
+
+        .meta-input {
+            flex: 1;
+            background: white;
+            border: 1px solid #ccc;
+            height: 20px;
+        }
+
+        .email-content {
+            padding: 20px;
+            font-size: 14px;
+            line-height: 1.5;
+            color: #222;
+            text-align: justify;
+            user-select: text; /* Allow selecting text in body */
+        }
+
+        /* Options Column (Right) */
+        .options-column {
+            flex: 4;
+            background-color: #e8e8e8;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            padding: 10px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            transition: background-color 0.2s;
+        }
+
+        /* Drop target feedback for the list itself */
+        .options-column.drag-over {
+            background-color: #d4d4d4;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        .option-card {
+            background-color: white;
+            border: 1px solid #bbb;
+            border-radius: 3px;
+            padding: 8px;
+            display: flex;
+            align-items: flex-start;
+            cursor: grab;
+            transition: all 0.2s;
+            font-size: 12px;
+            line-height: 1.3;
+        }
+
+        .option-card:hover {
+            background-color: var(--selection-blue);
+            border-color: #99c;
+            transform: translateY(-1px);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .option-card.dragging {
+            opacity: 0.5;
+            background-color: #eee;
+        }
+
+        /* Style for options that have been placed */
+        .option-card.placed {
+            opacity: 0.4;
+            pointer-events: none; /* Cannot click or drag again */
+            background-color: #ddd;
+            border-style: dashed;
+        }
+
+        .option-letter {
+            font-weight: bold;
+            color: var(--telc-blue);
+            margin-right: 8px;
+            min-width: 15px;
+        }
+
+        /* --- Footer --- */
+        .footer-controls {
+            background-color: #eee;
+            border-top: 1px solid #ccc;
+            padding: 8px 20px;
+            display: flex;
+            justify-content: flex-end;
+            height: 50px;
+            align-items: center;
+        }
+
+        .btn-reset {
+            background-color: var(--btn-blue);
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 3px;
+            font-weight: bold;
+            font-size: 12px;
+            cursor: pointer;
+        }
+
+        .btn-reset:hover {
+            opacity: 0.9;
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(227, 0, 27, 0.4); }
+            70% { box-shadow: 0 0 0 6px rgba(227, 0, 27, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(227, 0, 27, 0); }
+        }
+
+        /* Utility for Arabic text support if needed later */
+        .rtl {
+            direction: rtl;
+            text-align: right;
+            font-family: "Tahoma", sans-serif;
+            color: #666;
+            margin-top: 10px;
+            border-top: 1px dashed #ccc;
+            padding-top: 5px;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="top-bar">
+            <div class="logo-section">
+                <div class="logo-box">
+                    telc
+                    <span class="logo-sub">Language Tests</span>
+                </div>
+            </div>
+
+            <!-- Exam Tabs -->
+            <div class="tabs-wrapper">
+                <div class="tab active">
+                    <strong>Leseverstehen</strong>
+                    Teil 1
+                    <div class="points">(25 Punkte)</div>
+                </div>
+                <div class="tab">
+                    <strong>Leseverstehen</strong>
+                    Teil 2
+                    <div class="points">(25 Punkte)</div>
+                </div>
+                <div class="tab">
+                    <strong>Leseverstehen</strong>
+                    Teil 3
+                    <div class="points">(25 Punkte)</div>
+                </div>
+                <div class="tab">
+                    <strong>Sprachbausteine</strong>
+                    Teil 1
+                    <div class="points">(15 Punkte)</div>
+                </div>
+                <div class="tab">
+                    <strong>Sprachbausteine</strong>
+                    Teil 2
+                    <div class="points">(15 Punkte)</div>
+                </div>
+            </div>
+
+            <!-- Meta Controls -->
+            <div class="header-controls">
+                <div class="info-row">
+                    <span>Deutsch B2</span>
+                    <span>Max Mustermann</span>
+                </div>
+                <button class="btn-action">🏁 ABGABE</button>
+                <div class="info-row" style="justify-content: flex-end; margin-top:2px;">
+                    <span style="font-size:10px; color:#aaa;">Verbleibende Zeit: 88 Min</span>
+                </div>
+                <button class="btn-action">💾 SPEICHERN</button>
+            </div>
+        </div>
+
+        <div class="blue-stripe">
+            Leseverstehen, TEIL 1
+        </div>
+    </header>
+
+    <div class="main-wrapper">
+        <div class="instruction-box">
+            Lesen Sie die Überschriften a–j und die Texte 1–5 und entscheiden Sie, welche Überschrift am besten zu welchem Text passt.
+        </div>
+
+        <div class="split-view">
+            <!-- Left: Texts -->
+            <div class="text-column">
+                
+                <!-- Text 1 -->
+                <div class="email-container">
+                    <div class="email-header">
+                        <!-- Drop Zone 1 -->
+                        <span class="drop-zone" data-question="1" ondragover="handleDragOver(event)" ondrop="handleDrop(event)" onclick="handleZoneClick(1)">... 1 ...</span>
+                    </div>
+                    <div class="email-meta">
+                        <div class="meta-row"><div class="meta-label">An:</div><div class="meta-input"></div></div>
+                        <div class="meta-row"><div class="meta-label">CC:</div><div class="meta-input"></div></div>
+                        <div class="meta-row"><div class="meta-label">Betreff:</div><div class="meta-input"></div></div>
+                    </div>
+                    <div class="email-content">
+                        Die Shengsi-Inseln liegen im Ostchinesischen Meer. Nicht einmal 20 der rund 400 Inseln sind bewohnt, und manche, auf denen einst Menschen lebten, wurden wieder verlassen. Ein altes Dorf auf der nun unbewohnten Insel Shengsan ist zu einer Sehenswürdigkeit geworden. Die Einwohner haben das ehemalige Fischerdorf auf der viereinhalb Quadratkilometer großen Insel längst verlassen. Sie sind aus wirtschaftlichen Gründen auf das Festland gezogen. Dort ist es für sie leichter, ihren Fischfang zu verarbeiten und zu verkaufen. Das Dorf aber, das sie zurückgelassen haben, ist in kürzester Zeit von der Natur zurückerobert worden. Farne und Gräser überwuchern Häuser und Wege. Die Grenzen zwischen den von Menschenhand geschaffenen Gebäuden und dem umgebenden Urwald verschwinden: Mauerwerk, von wildem Wein überwuchert; Grün, so weit das Auge reicht. An diesem Ort lebt keine Menschenseele mehr.
+                    </div>
+                </div>
+
+                <!-- Text 2 -->
+                <div class="email-container">
+                    <div class="email-header">
+                        <!-- Drop Zone 2 -->
+                        <span class="drop-zone" data-question="2" ondragover="handleDragOver(event)" ondrop="handleDrop(event)" onclick="handleZoneClick(2)">... 2 ...</span>
+                    </div>
+                    <div class="email-meta">
+                        <div class="meta-row"><div class="meta-label">An:</div><div class="meta-input"></div></div>
+                        <div class="meta-row"><div class="meta-label">CC:</div><div class="meta-input"></div></div>
+                        <div class="meta-row"><div class="meta-label">Betreff:</div><div class="meta-input"></div></div>
+                    </div>
+                    <div class="email-content">
+                        Der Reiseveranstalter TOURIMARS hat kürzlich eine Befragung durchgeführt. Er wollte wissen, welche Inseln in Europa unter Reisenden besonders populär sind. Nach dieser Umfrage führt die griechische Insel Santorin die Liste an. Auf Platz zwei steht Madeira, die grüne Insel im Atlantik. Mit Kreta und Zakynthos schaffen es an dritter und vierter Stelle noch zwei weitere griechische Inseln in die Liste - übrigens wird die Attraktivität griechischer Inseln auch in anderen Umfragen bestätigt. Platz fünf nimmt die Badeinsel Fuerteventura ein. Rang sechs kommt der britischen Kanalinsel Jersey zu. Mallorca folgt auf Platz sieben, gefolgt von der italienischen Insel Capri und der Kanareninsel Teneriffa. Gerade noch in die Top Ten schaffte es auch die französische Mittelmeerinsel Korsika, die sowohl für Wanderer als auch für Badeurlauber interessant ist. Für die Umfrage waren Erfahrungsberichte von Urlaubern über einen Zeitraum von 12 Monaten ausgewertet worden. Sie bewerteten dabei die Hotels, Restaurants und Sehenswürdigkeiten der besuchten Insel.
+                    </div>
+                </div>
+
+                <!-- Text 3 -->
+                <div class="email-container">
+                    <div class="email-header">
+                         <!-- Drop Zone 3 -->
+                         <span class="drop-zone" data-question="3" ondragover="handleDragOver(event)" ondrop="handleDrop(event)" onclick="handleZoneClick(3)">... 3 ...</span>
+                    </div>
+                    <div class="email-meta">
+                        <div class="meta-row"><div class="meta-label">An:</div><div class="meta-input"></div></div>
+                        <div class="meta-row"><div class="meta-label">CC:</div><div class="meta-input"></div></div>
+                        <div class="meta-row"><div class="meta-label">Betreff:</div><div class="meta-input"></div></div>
+                    </div>
+                    <div class="email-content">
+                        Das ostfriesische Memmert ist für selten Vögel reserviert. Auf der Düneninsel, die vor ein paar Jahrhunderten aus der Nordsee aufgetaucht ist, leben Zigtausende von Vögeln. Nur der Inselvogt lebt zeitweise dort. Von Anfang März bis Ende Oktober ist der Forscher das einzige menschliche Wesen auf der kleinen Vogelschutzinsel im Wattenmeer. Im Auftrag des Landes Niedersachsen ist der Inselvogt zuständig für den Schutz von Natur und Vögeln auf Memmert. Von Mai bis Ende Juli ist Brutzeit auf der Insel. 100.000 Tiere, Vertreter von 60 verschiedenen Vogelarten, kommen Jahr für Jahr zum Brüten nach Memmert. Während dieser Zeit besteht ein absolutes Betretungsverbot - ausgenommen für Personen, die in Seenot geraten sind oder eine schriftliche Genehmigung haben. Ab August, dem Ende der Brutzeit, haben auch Urlauber für kurze Zeit die Chance auf einen Besuch, aber ausschließlich im Rahmen einer geführten Expedition. Nur mit einem Experten dürfen sie die Düneninsel im Wattenmeer erkunden.
+                    </div>
+                </div>
+
+                <!-- Text 4 -->
+                <div class="email-container">
+                    <div class="email-header">
+                        <!-- Drop Zone 4 -->
+                        <span class="drop-zone" data-question="4" ondragover="handleDragOver(event)" ondrop="handleDrop(event)" onclick="handleZoneClick(4)">... 4 ...</span>
+                    </div>
+                    <div class="email-meta">
+                        <div class="meta-row"><div class="meta-label">An:</div><div class="meta-input"></div></div>
+                        <div class="meta-row"><div class="meta-label">CC:</div><div class="meta-input"></div></div>
+                        <div class="meta-row"><div class="meta-label">Betreff:</div><div class="meta-input"></div></div>
+                    </div>
+                    <div class="email-content">
+                        Die südamerikanischen Galapagosinseln locken nicht mit weißen Sandstränden und Palmen. Dennoch sind sie das Ziel so mancher Reisesehnsüchte. Für viele Menschen gelten die fernen Inseln als eine Art Paradies. Und tatsächlich kommt man wohl nirgendwo sonst ungezähmten Tieren so nahe wir auf diesen Inseln: Auf den unbewohnten Galapagosinseln verhalten sich die Tiere so, als ob keine Menschen gäbe. Für die Besucher genauso faszinierend wie für die Entdeckungsreisenden früherer Jahrhunderte ist dabei die Zutraulichkeit, die sich die Tiere durch das Fehlen von natürlichen Feinden auf den Inseln bewahrt haben. Man kann das ganze Jahr über zu den Galapagosinseln reisen. Die bewohnten Inseln kann man dabei ganz gut allein besuchen. Anders sieht es bei den unbewohnten Inseln aus. Hier lassen die Behörden seit einigen Jahren nur eine begrenzte Zahl an Schiffen zu, und ohne Führer ist das Betreten nicht erlaubt. Die Inseln und ihre Tiere bleiben sich selbst überlassen, damit das Naturparadies auch weiterhin erhalten bleibt.
+                    </div>
+                </div>
+
+                <!-- Text 5 -->
+                <div class="email-container">
+                    <div class="email-header">
+                        <!-- Drop Zone 5 -->
+                        <span class="drop-zone" data-question="5" ondragover="handleDragOver(event)" ondrop="handleDrop(event)" onclick="handleZoneClick(5)">... 5 ...</span>
+                    </div>
+                    <div class="email-meta">
+                        <div class="meta-row"><div class="meta-label">An:</div><div class="meta-input"></div></div>
+                        <div class="meta-row"><div class="meta-label">CC:</div><div class="meta-input"></div></div>
+                        <div class="meta-row"><div class="meta-label">Betreff:</div><div class="meta-input"></div></div>
+                    </div>
+                    <div class="email-content">
+                        Dass Elefanten in Thailand teurer sein können als ein 3er-BMW in München, liegt an ihrem enormen wirtschaftlichen Potenzial: Sie sind eine der Hauptattraktionen der thailändischen Tourismusindustrie. Jeder dritte Besucher des Landes möchte mit Elefanten in Kontakt kommen oder hat das bereits hinter sich, zeigt die Umfrage einer Tierschutzgruppe. Die Organisation schätzt, dass in dem Land mehr als 2000 Elefanten im Einsatz sind, um die Nachfrage der Urlauber zu bedienen - so viele wie in keinem anderen Land der Welt. Was für die Besitzer ein gutes Geschäft ist, steht immer häufiger bei Tierschützern in der Kritik: Elefantenreiten sei die grausamste Tierattraktion der Welt. Sie sprechen von von einer lebenslangen Qual für die Elefanten. Mehr als 100 Reiseveranstalter haben solche Angebote schon aus den Katalogen gestrichen. Dies feiern Tierschützer als Sieg: 'Elefanten sind Wildtiere, keine Entertainer.' Dass die Lebensbedingungen der Tourismuselefanten nicht artgerecht sind, ist bekannt. Doch selbst wenn sie nicht mehr als Einnahmequelle dienen, wird das an ihren Lebenumständen wenig ändern.
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Right: Options (Drop target for resetting) -->
+            <div class="options-column" id="optionsList" ondragover="handleDragOver(event)" ondrop="handleListDrop(event)">
+                <!-- draggable="true" added to all cards with data-id -->
+                
+                <div class="option-card" draggable="true" data-id="a" ondragstart="handleDragStart(event)" onclick="handleOptionClick('a')">
+                    <span class="option-letter">a</span>
+                    <span>Deutscher Forscher startet Expedition auf Vogelinsel in Südamerika</span>
+                </div>
+                <div class="option-card" draggable="true" data-id="b" ondragstart="handleDragStart(event)" onclick="handleOptionClick('b')">
+                    <span class="option-letter">b</span>
+                    <span>Die beliebtesten Reiseziele unter den europäischen Inseln</span>
+                </div>
+                <div class="option-card" draggable="true" data-id="c" ondragstart="handleDragStart(event)" onclick="handleOptionClick('c')">
+                    <span class="option-letter">c</span>
+                    <span>Fernreisen in eine unberührte Tierwelt</span>
+                </div>
+                <div class="option-card" draggable="true" data-id="d" ondragstart="handleDragStart(event)" onclick="handleOptionClick('d')">
+                    <span class="option-letter">d</span>
+                    <span>Geführte Bootsausflüge zu einsamen Badebuchten</span>
+                </div>
+                <div class="option-card" draggable="true" data-id="e" ondragstart="handleDragStart(event)" onclick="handleOptionClick('e')">
+                    <span class="option-letter">e</span>
+                    <span>Grüne Geisterinsel in Asien</span>
+                </div>
+                <div class="option-card" draggable="true" data-id="f" ondragstart="handleDragStart(event)" onclick="handleOptionClick('f')">
+                    <span class="option-letter">f</span>
+                    <span>Immer mehr Reiseunternehmen streichen Thailand aus ihrem Angebot</span>
+                </div>
+                <div class="option-card" draggable="true" data-id="g" ondragstart="handleDragStart(event)" onclick="handleOptionClick('g')">
+                    <span class="option-letter">g</span>
+                    <span>Inseln zählen weltweit zu den wichtigsten Reisedestinationen</span>
+                </div>
+                <div class="option-card" draggable="true" data-id="h" ondragstart="handleDragStart(event)" onclick="handleOptionClick('h')">
+                    <span class="option-letter">h</span>
+                    <span>Nachhaltiger Tourismus auf chinesischen Inseln</span>
+                </div>
+                <div class="option-card" draggable="true" data-id="i" ondragstart="handleDragStart(event)" onclick="handleOptionClick('i')">
+                    <span class="option-letter">i</span>
+                    <span>Tierparadies auf einer Nordseeinsel</span>
+                </div>
+                <div class="option-card" draggable="true" data-id="j" ondragstart="handleDragStart(event)" onclick="handleOptionClick('j')">
+                    <span class="option-letter">j</span>
+                    <span>Umstrittener Umgang mit Tieren als Touristenmagnet</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer-controls">
+        <button class="btn-reset" onclick="resetAll()">Zurücksetzen</button>
+    </div>
+
+    <script>
+        // Track which answer is assigned to which question
+        // e.g., { 1: 'a', 2: null }
+        let assignments = {
+            1: null, 2: null, 3: null, 4: null, 5: null
+        };
+        
+        let activeQuestionId = null; // Track which placeholder is currently clicked/active
+
+        // --- Drag and Drop Logic ---
+
+        function handleDragStart(e) {
+            // Check if we are dragging from the list or from a placeholder
+            // If dragging from list, data-id is on the target
+            // If dragging from placeholder, we need to handle that specifically
+            let id = e.target.getAttribute('data-id');
+            
+            // If dragging an already filled drop zone (special case)
+            if (e.target.classList.contains('drop-zone') && e.target.classList.contains('filled')) {
+                // We are dragging an answer OUT of a placeholder
+                // The answer ID is stored in the data-value attribute we set earlier
+                id = e.target.getAttribute('data-value');
+                // We also need to know which question we are dragging FROM to clear it
+                e.dataTransfer.setData("sourceQuestion", e.target.getAttribute('data-question'));
+            }
+
+            e.dataTransfer.setData("text/plain", id);
+            e.target.classList.add('dragging');
+        }
+
+        // Allow dropping
+        function handleDragOver(e) {
+            e.preventDefault();
+            // Add visual cue
+            if (e.currentTarget.classList.contains('drop-zone') || e.currentTarget.id === 'optionsList') {
+                e.currentTarget.classList.add('drag-over');
+            }
+        }
+
+        // Handle Drop on Placeholder (Assigning)
+        function handleDrop(e) {
+            e.preventDefault();
+            const dropZone = e.currentTarget;
+            dropZone.classList.remove('drag-over');
+
+            const answerId = e.dataTransfer.getData("text/plain");
+            const sourceQuestion = e.dataTransfer.getData("sourceQuestion"); // If moved from another Q
+            const targetQuestionId = dropZone.getAttribute('data-question');
+
+            if (!answerId) return;
+
+            // If we dragged from another question, clear that question first
+            if (sourceQuestion && sourceQuestion !== targetQuestionId) {
+                clearAssignment(sourceQuestion);
+            }
+
+            // Assign the answer
+            assignAnswer(targetQuestionId, answerId);
+        }
+
+        // Handle Drop on List (Resetting/Removing)
+        function handleListDrop(e) {
+            e.preventDefault();
+            const list = document.getElementById('optionsList');
+            list.classList.remove('drag-over');
+
+            const answerId = e.dataTransfer.getData("text/plain");
+            const sourceQuestion = e.dataTransfer.getData("sourceQuestion");
+
+            // Only act if we dragged FROM a question (resetting)
+            if (sourceQuestion) {
+                clearAssignment(sourceQuestion);
+            }
+        }
+
+        // --- Click Logic ---
+
+        // User clicks a placeholder (Drop Zone)
+        function handleZoneClick(questionId) {
+            const dropZone = document.querySelector(`.drop-zone[data-question="${questionId}"]`);
+            
+            // If it's already filled, clicking it removes the answer (or just unselects)
+            // Let's make it remove/reset for easy correction
+            if (dropZone.classList.contains('filled')) {
+                clearAssignment(questionId);
+                return;
+            }
+
+            // Toggle Active State
+            if (activeQuestionId === questionId) {
+                // Deactivate if clicked again
+                activeQuestionId = null;
+                dropZone.classList.remove('active-target');
+            } else {
+                // Deactivate previous
+                if (activeQuestionId) {
+                    const prev = document.querySelector(`.drop-zone[data-question="${activeQuestionId}"]`);
+                    if(prev) prev.classList.remove('active-target');
+                }
+                // Activate new
+                activeQuestionId = questionId;
+                dropZone.classList.add('active-target');
+            }
+        }
+
+        // User clicks an Option in the list
+        function handleOptionClick(answerId) {
+            const optionCard = document.querySelector(`.option-card[data-id="${answerId}"]`);
+
+            // If this option is already placed elsewhere, do nothing (or move it?)
+            // For now, let's assume if it's placed, it's disabled.
+            if (optionCard.classList.contains('placed')) return;
+
+            // If we have an active placeholder, assign this answer to it
+            if (activeQuestionId) {
+                assignAnswer(activeQuestionId, answerId);
+                
+                // Clear active state
+                const dropZone = document.querySelector(`.drop-zone[data-question="${activeQuestionId}"]`);
+                if(dropZone) dropZone.classList.remove('active-target');
+                activeQuestionId = null;
+            }
+        }
+
+        // --- Core Logic ---
+
+        function assignAnswer(questionId, answerId) {
+            // 1. Check if this question already has an answer. If so, return old answer to list.
+            if (assignments[questionId]) {
+                const oldAnswer = assignments[questionId];
+                const oldCard = document.querySelector(`.option-card[data-id="${oldAnswer}"]`);
+                if(oldCard) oldCard.classList.remove('placed');
+            }
+
+            // 2. Check if this answer is used elsewhere. If so, clear that other question.
+            for (let q in assignments) {
+                if (assignments[q] === answerId && q != questionId) {
+                    clearAssignment(q);
+                }
+            }
+
+            // 3. Update State
+            assignments[questionId] = answerId;
+
+            // 4. Update UI - Drop Zone
+            const dropZone = document.querySelector(`.drop-zone[data-question="${questionId}"]`);
+            dropZone.textContent = answerId.toUpperCase(); // Show "A", "B"...
+            dropZone.classList.add('filled');
+            dropZone.setAttribute('draggable', 'true'); // Make draggable to move back
+            dropZone.setAttribute('data-value', answerId); // Store value for dragstart
+            dropZone.ondragstart = handleDragStart; // Bind drag start
+
+            // 5. Update UI - Option List
+            const optionCard = document.querySelector(`.option-card[data-id="${answerId}"]`);
+            if(optionCard) optionCard.classList.add('placed');
+        }
+
+        function clearAssignment(questionId) {
+            const answerId = assignments[questionId];
+            if (!answerId) return;
+
+            // Reset State
+            assignments[questionId] = null;
+
+            // Reset Drop Zone
+            const dropZone = document.querySelector(`.drop-zone[data-question="${questionId}"]`);
+            dropZone.textContent = `... ${questionId} ...`;
+            dropZone.classList.remove('filled');
+            dropZone.classList.remove('active-target'); // ensure active state is gone
+            dropZone.removeAttribute('draggable');
+            dropZone.removeAttribute('data-value');
+
+            // Reset Option List
+            const optionCard = document.querySelector(`.option-card[data-id="${answerId}"]`);
+            if(optionCard) optionCard.classList.remove('placed');
+        }
+
+        function resetAll() {
+            for (let i = 1; i <= 5; i++) {
+                clearAssignment(i);
+            }
+            activeQuestionId = null;
+        }
+
+        // Clean up drag classes on dragend
+        document.addEventListener('dragend', function(e) {
+            document.querySelectorAll('.dragging').forEach(el => el.classList.remove('dragging'));
+            document.querySelectorAll('.drag-over').forEach(el => el.classList.remove('drag-over'));
+        });
+        
+        // Clean up drag-over classes on dragleave
+        document.addEventListener('dragleave', function(e) {
+             if (e.target.classList.contains('drop-zone') || e.target.id === 'optionsList') {
+                e.target.classList.remove('drag-over');
+            }
+        });
+
+    </script>
+</body>
+</html>
